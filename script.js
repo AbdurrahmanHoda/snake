@@ -2,7 +2,7 @@ document.addEventListener("keydown", keyHandler, false);
 const canvas = document.getElementById("game-area");
 const statusDiv = document.getElementById("status");
 const startBtn = document.getElementById("startBtn");
-const highscoreDiv = document.getElementById("highscore");
+const highscoreDiv = document.getElementById("highScoreDiv");
 const scoreDiv = document.getElementById("ScoreDiv");
 const context = canvas.getContext("2d");
 const gridSize = 40;
@@ -15,7 +15,11 @@ let direction = "right";
 const snakeStartLength = 5;
 let highscore = 0;
 let score = 0;
-
+let storedhighscore= window.localStorage.getItem("snakeHighscore") ;
+if (storedhighscore != null ) {
+  highscore = storedhighscore;
+  highscoreDiv.innerHTML = `High Score: ${highscore}`;
+}
 function keyHandler(e) {
   if (e.key === "ArrowRight" && direction !== "left") {
     direction = "right";
@@ -74,12 +78,15 @@ function moveSnake() {
   }
 
   snake.unshift(newHead);
-  if (newHead.x === food.x && newHead.y === food.y && setTimeout(tick + 10)) {
+  if (newHead.x === food.x && newHead.y === food.y) {
     createfood();
     score++;
     if (score > highscore) {
       highscore = score;
+      window.localStorage.setItem("snakeHighscore",highscore);
     }
+    highscoreDiv.innerHTML = `High Score: ${highscore}`;
+    scoreDiv.innerHTML = `Score: ${score}`;
   } else {
     snake.pop();
   }
